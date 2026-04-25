@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VOLTMASTER PRO v1.2.5 | ENGINEERING EDITION</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+:root { --bg:#0f172a; --card:#1e293b; --accent:#10b981; --text:#f1f5f9; --border:#334155; --pro:#f59e0b; }
+body{margin:0;font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;background:var(--bg);color:var(--text);padding-bottom:50px;}
+header{text-align:center;padding:30px;background:#020617;border-bottom:3px solid var(--pro);box-shadow: 0 4px 15px rgba(0,0,0,0.3);}
+header h1 { margin: 0; font-size: 1.8rem; letter-spacing: 2px; color: #fff; }
+header p { margin: 8px 0 0 0; color: var(--pro); font-weight: 600; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px;}
+.container{max-width:1100px;margin:auto;padding:20px;}
+.card{background:var(--card);padding:20px;border-radius:12px;margin-top:20px;border:1px solid var(--border); transition: 0.3s;}
+.card:hover { border-color: var(--pro); }
+h3{margin-top:0;color:var(--accent);font-size:1.1rem;border-bottom:2px solid var(--border);padding-bottom:10px;margin-bottom:15px;text-transform: uppercase;}
+.grid{display:grid;grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));gap:15px;margin-bottom:15px;}
+input,select{width:100%;padding:10px;background:#020617;color:white;border:1px solid var(--border);border-radius:6px;box-sizing: border-box;font-size:0.9rem; outline: none;}
+input:focus, select:focus { border-color: var(--accent); }
+button{width:100%;padding:18px;margin-top:20px;background:var(--accent);border:none;font-weight:bold;cursor:pointer;border-radius:6px;font-size:1.1rem;color:#020617; text-transform: uppercase; transition: 0.2s;}
+button:hover { background: #059669; transform: translateY(-2px); }
+.result{white-space:pre-wrap;margin-top:25px;background:#020617;padding:35px;display:none;border-radius:10px;font-family: 'Consolas', 'Monaco', monospace;font-size:0.9rem;border:1px solid var(--accent);line-height:1.6; color: #d1d5db;}
+label{font-size:0.75rem;color:#94a3b8;display:block;margin-bottom:5px; font-weight: 600;}
+.badge { background: var(--pro); color: #000; padding: 3px 8px; border-radius: 4px; font-size: 0.7rem; vertical-align: middle; margin-left: 10px; font-weight: 800;}
+</style>
+</head>
+<body>
+
+<header>
+    <h1>VOLTMASTER PRO <span class="badge">V1.2.5 ENGINEERING</span></h1>
+    <p>Professional Compliance & Load Calculation Suite</p>
+</header>
+
+<div class="container">
+    <div class="card">
+        <h3>1. Project Reference & Branding</h3>
+        <div class="grid">
+            <div><label>Company/Client</label><input id="compName" placeholder="Client Name" type="text"></div>
+            <div><label>Project Name</label><input id="projName" placeholder="Tender Project A" type="text"></div>
+            <div><label>Prepared By</label><input id="prepBy" placeholder="Technician/Engineer" type="text"></div>
+            <div><label>Ref No.</label><input id="projRef" placeholder="PROJ/2026/MY" type="text"></div>
+        </div>
+    </div>
+
+    <div class="card" style="border-left: 5px solid var(--pro);">
+        <h3>2. Unit Rate Settings (RM)</h3>
+        <div class="grid">
+            <div><label>Light/Fan Pt</label><input id="rateL" value="85" type="number"></div>
+            <div><label>Exhaust Fan</label><input id="rateEF" value="110" type="number"></div>
+            <div><label>Socket Point</label><input id="rateS" value="160" type="number"></div>
+            <div><label>AC Point</label><input id="rateAC" value="250" type="number"></div>
+            <div><label>Heater Pt</label><input id="rateWH" value="280" type="number"></div>
+            <div><label>DB Base Rate</label><input id="rateDB" value="650" type="number"></div>
+        </div>
+    </div>
+
+    <div class="card">
+        <h3>3. System Technical Parameters</h3>
+        <div class="grid">
+            <div><label>Supply Phase</label><select id="phaseType"><option value="1">1-Phase</option><option value="3">3-Phase</option></select></div>
+            <div><label>Wiring Method</label><select id="wireStyle"><option value="conduit">PVC Conduit</option><option value="trunking">Steel Trunking</option><option value="concealed">Concealed</option></select></div>
+            <div><label>Diversity (DF)</label><input id="pDF" value="0.8" step="0.1" type="number"></div>
+            <div><label>Route Length (m)</label><input id="cLen" value="30" type="number"></div>
+        </div>
+    </div>
+
+    <div class="card">
+        <h3>4. Load Calculation Data</h3>
+        <div class="grid">
+            <div><label>Lighting Qty</label><input id="qL" value="10" type="number"></div>
+            <div><label>Ceiling Fan</label><input id="qF" value="5" type="number"></div>
+            <div><label>Exhaust Fan</label><input id="qEF" value="0" type="number"></div>
+            <div><label>Outdoor Light</label><input id="qOL" value="0" type="number"></div>
+        </div>
+        <div class="grid" style="background: #0f172a; padding: 15px; border-radius: 8px;">
+            <div><label>Socket Qty</label><input id="qS" value="12" type="number"></div>
+            <div>
+                <label>Socket Wiring Type</label>
+                <select id="socketCable">
+                    <option value="4.0">4.0mm² (Radial - JKR)</option>
+                    <option value="2.5">2.5mm² (Ring - IEE)</option>
+                </select>
+            </div>
+        </div>
+        <div class="grid">
+            <div><label>Water Heater</label><input id="qWH" value="1" type="number"></div>
+            <div><label>Aircond 1.0HP</label><input id="qty1" value="1" type="number"></div>
+            <div><label>Aircond 1.5HP</label><input id="qty2" value="0" type="number"></div>
+            <div><label>Aircond 2.0HP+</label><input id="qty3" value="0" type="number"></div>
+        </div>
+        
+        <button onclick="calc()">GENERATE COMPLIANCE REPORT</button>
+        <div id="out" class="result"></div>
+        <button style="background:#334155;color:white" onclick="pdf()">EXPORT OFFICIAL PDF</button>
+    </div>
+</div>
+
+<script>
+const breakers = [20, 32, 40, 63, 80, 100];
+
+function calc() {
+    try {
+        const getV = (id) => parseFloat(document.getElementById(id).value) || 0;
+        const phase = getV('phaseType');
+        const socketChoice = document.getElementById('socketCable').value;
+        const wStyle = document.getElementById('wireStyle').value;
+        
+        const now = new Date();
+        const dateStr = `${String(now.getDate()).padStart(2,'0')}/${String(now.getMonth()+1).padStart(2,'0')}/${now.getFullYear()}`;
+        
+        let totalMCB = 0;
+        let details = "";
+
+        // Standard JKR/IEE Points Per Circuit
+        const addRow = (qty, label, ptsPerCct, mcb, cable, extraNote="") => {
+            if (qty <= 0) return "";
+            const c = Math.ceil(qty / ptsPerCct);
+            totalMCB += c;
+            return `${label} ${extraNote}\n   - Qty: ${qty} | Circuits: ${c} | MCB: ${mcb} | Cable: ${cable}\n\n`;
+        };
+
+        details += addRow(getV('qL'), "A. LIGHTING", 10, "6A", "1.5mm²");
+        details += addRow(getV('qF'), "B. CEILING FANS", 10, "10A", "1.5mm²");
+        details += addRow(getV('qEF'), "C. EXHAUST FANS", 10, "10A", "1.5mm²");
+        details += addRow(getV('qOL'), "D. OUTDOOR LIGHTS", 10, "6A", "1.5mm²");
+
+        // SOCKET LOGIC (JKR Standard Compliance)
+        let sQty = getV('qS');
+        if(sQty > 0) {
+            let sCable = socketChoice + "mm²";
+            let sType = socketChoice === "4.0" ? "(Radial - JKR Std)" : "(Ring - IEE Std)";
+            let ptsLimit = socketChoice === "4.0" ? 10 : 12; // JKR prefers 10 for Radials
+            details += addRow(sQty, "E. SOCKET OUTLETS", ptsLimit, "32A", sCable, sType);
+        }
+
+        // AC & WH
+        let acCount = getV('qty1') + getV('qty2') + getV('qty3');
+        totalMCB += acCount + getV('qWH');
+        if(acCount > 0) details += `F. AIR-CONDITIONING\n   - Total Qty: ${acCount} | Indiv. Circuits | MCB: 20A-32A | Cable: 2.5-4.0mm²\n\n`;
+        if(getV('qWH') > 0) details += `G. WATER HEATERS\n   - Total Qty: ${getV('qWH')} | Indiv. Circuits | MCB: 20A | Cable: 4.0mm²\n\n`;
+
+        // Load Math
+        const TCL = (getV('qL')*15) + (getV('qF')*75) + (getV('qS')*250) + (getV('qty1')*900) + (getV('qty2')*1200) + (getV('qWH')*3000);
+        const MD = TCL * getV('pDF');
+        const Ib = (phase == 1) ? MD / (230 * 0.85) : MD / (1.732 * 400 * 0.85);
+        const mainS = breakers.find(b => b >= (Ib * 1.25)) || 63;
+
+        // Containment
+        const totalFactor = (totalMCB * 3 * 30); // Rough factor for grouping
+        let mainH = wStyle === "conduit" ? (totalFactor > 460 ? "25mm" : "20mm") : "2x2 inch";
+
+        let totalVal = (getV('qL')+getV('qF'))*getV('rateL') + (getV('qEF')*getV('rateEF')) + (getV('qS')*getV('rateS')) + (acCount*getV('rateAC')) + (getV('qWH')*getV('rateWH')) + getV('rateDB');
+
+        let report = `======================================================================
+                  ELECTRICAL TECHNICAL COMPLIANCE REPORT
+======================================================================
+PROJECT  : ${document.getElementById('projName').value || "N/A"}
+REF NO   : ${document.getElementById('projRef').value || "REF-"+Date.now()}
+DATE     : ${dateStr}
+PREPARED : ${document.getElementById('prepBy').value || "SYSTEM"}
+----------------------------------------------------------------------
+[1. CIRCUITRY & LOAD DISTRIBUTION]
+----------------------------------------------------------------------
+${details}
+[2. MAIN DISTRIBUTION BOARD (DB) PROTECTION]
+----------------------------------------------------------------------
+Main Switch Recommendation : ${mainS}A
+Incoming Cable Spec       : ${mainS > 40 ? '16.0mm²' : '10.0mm²'} Cu/PVC
+Neutral / Earth Link      : High Conductivity Copper
+Total Active MCB Ways     : ${totalMCB}
+DB Physical Enclosure     : ${totalMCB <= 14 ? '18-Way' : '24-Way'} (Metal TPN/SPN)
+
+[3. CONTAINMENT & INSTALLATION]
+----------------------------------------------------------------------
+Wiring Style              : ${wStyle.toUpperCase()}
+Main Header Size          : ${mainH}
+Individual Branch Size    : 20mm High Impact Conduit
+Compliance Standard       : BS 7671 / MS 1979 (45% Space Factor)
+
+[4. ENGINEERING SUMMARY]
+----------------------------------------------------------------------
+Total Connected Load (TCL): ${(TCL/1000).toFixed(2)} kW
+Maximum Demand (MD)       : ${(MD/1000).toFixed(2)} kW (@ ${getV('pDF')} DF)
+Current Demand (Ib)       : ${Ib.toFixed(2)} Amps
+
+[5. COMMERCIAL ESTIMATE]
+----------------------------------------------------------------------
+ESTIMATED WORK VALUE      : RM ${totalVal.toLocaleString()}
+(Final price subject to site routing and material volatility)
+
+Generated via VoltMaster Pro v1.2.5 (Compliance Series)
+======================================================================`;
+
+        document.getElementById('out').style.display = "block";
+        document.getElementById('out').innerText = report;
+    } catch (e) { alert("Data input error."); }
+}
+
+async function pdf() {
+    const { jsPDF } = window.jspdf;
+    let doc = new jsPDF('p', 'mm', 'a4');
+    
+    // UI Upgrade for PDF - More "Formal Blue" theme
+    doc.setFillColor(2, 6, 23);
+    doc.rect(0, 0, 210, 30, 'F');
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(16);
+    doc.text("ELECTRICAL TECHNICAL REPORT", 105, 15, { align: "center" });
+    doc.setFontSize(8);
+    doc.text("VOLTMASTER PRO ENGINEERING SERIES", 105, 22, { align: "center" });
+
+    doc.setTextColor(0,0,0);
+    doc.setFont("courier", "bold");
+    const content = document.getElementById('out').innerText;
+    const splitContent = doc.splitTextToSize(content, 180);
+    doc.text(splitContent, 15, 45);
+    
+    doc.save(`Report_${document.getElementById('projRef').value}.pdf`);
+}
+</script>
+</body>
+</html>
